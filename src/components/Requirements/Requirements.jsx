@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { DefaultBtn } from "../../assets/components.styles";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 function Requirements({ collection, setCollection }) {
   const [saveActive, setSaveActive] = useState(false);
@@ -10,7 +10,7 @@ function Requirements({ collection, setCollection }) {
   const index = Number(path[path.length - 1]);
 
   const detailedData = collection.find((item) => item.id === index);
-  const fixedExpireDate = detailedData?.expireDate.slice(0, -4); // Remove the extra digits
+  const fixedExpireDate = detailedData?.expireDate.slice(0, -4);
   const dateObject = new Date(fixedExpireDate);
   const options = { month: "long", day: "numeric" };
   const formattedExpireDate = dateObject.toLocaleDateString("en-US", options);
@@ -167,7 +167,9 @@ function Requirements({ collection, setCollection }) {
                 </div>
               </div>
             </div>
-            <DefaultBtn className="requirements__apply">Apply now</DefaultBtn>
+            <Link to={`/jobs/apply/${detailedData?.id}`}>
+              <DefaultBtn className="requirements__apply">Apply now</DefaultBtn>
+            </Link>
           </div>
           <div className="requirements__content">
             <div className="requirements__content-top">

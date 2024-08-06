@@ -1,10 +1,21 @@
 import { useState } from "react";
 import ApplicationLetter from "./ApplicationLetter";
 import ApplicationForm from "./ApplicationForm";
+import { useLocation } from "react-router-dom";
 
-function Application({ inputs, setInputs, setActiveModal }) {
+function Application({ collection, inputs, setInputs, setActiveModal }) {
   const [activeStep, setActiveStep] = useState(1);
   const [activeForm, setActiveForm] = useState(false);
+
+  const location = useLocation();
+
+  const path = location.pathname.split("/").filter((x) => x !== "");
+  const index = Number(path[path.length - 1]);
+
+  const detailedData = collection.find((item) => item.id === index);
+  console.log(detailedData);
+  
+
   const steps = ["Personal information", "Motivation letter"];
   return (
     <section id="application">
@@ -28,7 +39,7 @@ function Application({ inputs, setInputs, setActiveModal }) {
             </svg>
           </span>
           <div className="application__header">
-            <h1>Apply for “UX/UI Designer” role in Hiring Company</h1>
+            <h1>Apply for “{detailedData?.position}” role in {detailedData?.company.name}</h1>
             <p>Make sure you fill correct information about yourself.</p>
           </div>
         </div>

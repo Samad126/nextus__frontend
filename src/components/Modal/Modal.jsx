@@ -1,8 +1,7 @@
-import React from "react";
 import ConfirmModal from "./ConfirmModal";
 import CongratsModal from "./CongratsModal";
 
-function Modal({userData ,inputs ,setActiveModal, activeModal }) {
+function Modal({collection, userData ,inputs ,setActiveModal, activeModal }) {
   const modals = ["confirm-modal", "congrats-modal"];
 
   return (
@@ -18,7 +17,7 @@ function Modal({userData ,inputs ,setActiveModal, activeModal }) {
             className="modal__container"
           >
             {activeModal === "confirm-modal" ? (
-              <ConfirmModal userData={userData} inputs={inputs} setActiveModal={setActiveModal} />
+              <ConfirmModal collection={collection} userData={userData} inputs={inputs} setActiveModal={setActiveModal} />
             ) : activeModal === "congrats-modal" ? (
               <CongratsModal setActiveModal={setActiveModal} />
             ) : (

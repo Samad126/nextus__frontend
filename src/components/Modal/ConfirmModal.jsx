@@ -1,9 +1,19 @@
 import axios from "axios";
 import { DefaultBtn } from "../../assets/components.styles";
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 
-function ConfirmModal({ userData, inputs, setActiveModal }) {
+function ConfirmModal({ collection, userData, inputs, setActiveModal }) {
   const [finalData, setFinalData] = useState({});
+
+  const location = useLocation();
+
+  const path = location.pathname.split("/").filter((x) => x !== "");
+  const index = Number(path[path.length - 1]);
+
+  const detailedData = collection.find((item) => item.id === index);
+
+  console.log(detailedData);
 
   useEffect(() => {
     if (inputs && userData.id) {
@@ -11,13 +21,13 @@ function ConfirmModal({ userData, inputs, setActiveModal }) {
         FullName: inputs.FullName,
         CoverLetter: inputs.CoverLetter,
         Cv: inputs.Cv,
-        JobId: 8,
+        JobId: detailedData?.id,
         UserId: userData.id,
       };
       setFinalData(data);
       console.log("Final Data:", data);
     }
-  }, [inputs, userData]);
+  }, [detailedData?.id, inputs, userData]);
 
   const handleSubmit = async (e) => {
     e.stopPropagation();

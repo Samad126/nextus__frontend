@@ -70,6 +70,10 @@ function App() {
   } else if (location.pathname.includes("/courses")) {
     url = "https://aliyevelton-001-site1.ltempurl.com/api/Courses";
   }
+
+  console.log(collection);
+
+
   useEffect(() => {
     if (url.length > 0) {
       axios
@@ -100,17 +104,6 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route
-          path="/jobs"
-          element={
-            <Collection
-              error={error}
-              activeFilter={activeFilter}
-              setActiveFilter={setActiveFilter}
-              collection={collection}
-            />
-          }
-        />
-        <Route
           path="/courses"
           element={
             <Collection
@@ -131,6 +124,17 @@ function App() {
           }
         />
         <Route
+          path="/jobs"
+          element={
+            <Collection
+              error={error}
+              activeFilter={activeFilter}
+              setActiveFilter={setActiveFilter}
+              collection={collection}
+            />
+          }
+        />
+        <Route
           path="/jobs/:id"
           element={
             <Requirements
@@ -139,12 +143,19 @@ function App() {
             />
           }
         />
+        <Route
+          path="/jobs/apply/:id"
+          element={
+            <Application
+              collection={collection}
+              inputs={inputs}
+              setInputs={setInputs}
+              setActiveModal={setActiveModal}
+            />
+          }
+        />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route
-          path="/application"
-          element={<Application inputs={inputs} setInputs={setInputs} setActiveModal={setActiveModal} />}
-        />
         <Route path="/contact-us" element={<ContactUs />} />
         <Route path="/profile" element={<Profile userData={userData} />} />
         <Route path="/profile/share-post" element={<SharePost />} />
@@ -152,7 +163,7 @@ function App() {
       </Routes>
 
       {activeModal.length > 0 ? (
-        <Modal userData={userData} inputs={inputs} setActiveModal={setActiveModal} activeModal={activeModal} />
+        <Modal collection={collection} userData={userData} inputs={inputs} setActiveModal={setActiveModal} activeModal={activeModal} />
       ) : (
         ""
       )}
