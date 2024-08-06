@@ -1,15 +1,17 @@
-import React from "react";
+import React, { act, useState } from "react";
 import PageHeader from "../PageHeader/PageHeader";
 import Categories from "../Categories/Categories";
 import Card from "../Card/Card";
 import { pageHeaderContent } from "../../constants";
 import { DefaultBtn } from "../../assets/components.styles";
 
-function Collection({ activeFilter, setActiveFilter, collection, error }) {
+function Collection({ setCollection, activeFilter, setActiveFilter, collection, error }) {
+
   return (
     <section id="collection">
       <div className="collection__container">
         <PageHeader
+          setCollection={setCollection}
           error={error}
           list={collection}
           content={pageHeaderContent}
@@ -21,9 +23,8 @@ function Collection({ activeFilter, setActiveFilter, collection, error }) {
           <p className="error-message">no data found!</p>
         ) : (
           <div
-            className={`collection__bottom ${
-              activeFilter ? "active-container" : ""
-            }`}
+            className={`collection__bottom ${activeFilter ? "active-container" : ""
+              }`}
           >
             <Categories
               activeFilter={activeFilter}

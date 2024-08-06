@@ -21,7 +21,7 @@ function Application({ collection, inputs, setInputs, setActiveModal }) {
     <section id="application">
       <div className="application__container">
         <div className="application__top">
-          <span>
+          <span onClick={() => history.back()}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="26"

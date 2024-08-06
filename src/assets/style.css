@@ -938,7 +938,9 @@ a {
   font-size: 16px;
 }
 .search__results .search__results-found p:last-child {
-  color: #bebebe;
+  color: #fff;
+  text-align: center;
+  width: 100%;
   font-size: 14px;
 }
 
@@ -2417,6 +2419,9 @@ header .header__container .hamburger-react {
   margin-bottom: 40px;
   display: flex;
   gap: 12px;
+}
+.requirements__content-details{
+  justify-content: center;
 }
 #requirements .requirements__container .requirements__bottom .requirements__content .requirements__content-details .requirements__content-detail {
   display: flex;

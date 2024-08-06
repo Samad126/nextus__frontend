@@ -1,61 +1,82 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DefaultBtn } from "../../assets/components.styles";
 import { Link, useLocation } from "react-router-dom";
+import axios from "axios";
 
-function Requirements({ collection, setCollection }) {
+function Requirements({ userData }) {
   const [saveActive, setSaveActive] = useState(false);
+  const [detailedData, setDetailedData] = useState();
   const location = useLocation();
 
   const path = location.pathname.split("/").filter((x) => x !== "");
   const index = Number(path[path.length - 1]);
 
-  const detailedData = collection.find((item) => item.id === index);
+  console.log(userData, detailedData);
+
+  // useEffect(() => {
+  //   async function fetchJob() {
+  //     try {
+  //       const response = await axios.get(`https://aliyevelton-001-site1.ltempurl.com/api/JobBookmarks/${index}`, {
+  //         userId : userData.id
+  //       });
+  //       setSaveActive(response);
+  //     } catch (error) {
+  //       console.error("Error fetching job data:", error);
+  //     }
+  //   }
+  //   if (index !== undefined && index !== null) {
+  //     fetchJob();
+  //   }
+  // }, [index, userData.id]);
+
+  useEffect(() => {
+    async function fetchJob() {
+      try {
+        await axios.post(`https://aliyevelton-001-site1.ltempurl.com/api/Jobs/${index}/increment-view-count`);
+      } catch (error) {
+        console.error("Error fetching job data:", error);
+      }
+    }
+    if (index !== undefined && index !== null) {
+      fetchJob();
+    }
+  }, [index]);
+
+  useEffect(() => {
+    async function fetchJob() {
+      try {
+        const response = await axios.get(`https://aliyevelton-001-site1.ltempurl.com/api/Jobs/${index}`);
+        setDetailedData(response.data);
+      } catch (error) {
+        console.error("Error fetching job data:", error);
+      }
+    }
+    if (index !== undefined && index !== null) {
+      fetchJob();
+    }
+  }, [index]);
+
+  console.log(detailedData);
+
   const fixedExpireDate = detailedData?.expireDate.slice(0, -4);
   const dateObject = new Date(fixedExpireDate);
   const options = { month: "long", day: "numeric" };
   const formattedExpireDate = dateObject.toLocaleDateString("en-US", options);
 
-  const requirementsDetails = [
-    {
-      label: "Salary",
-      value: 500,
-    },
-    {
-      label: "Job type",
-      value: "Full - time",
-    },
-    {
-      label: "Experience",
-      value: "1 year",
-    },
-    {
-      label: "Deadline",
-      value: "26 may",
-    },
-  ];
-
-  const descriptionAndRequirements = [
-    {
-      label: "Job Description",
-      fields: [
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
-      ],
-    },
-    {
-      label: "Requirements",
-      fields: [
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
-      ],
-    },
-  ];
+  function handleBookmark() {
+    try {
+      axios.post(`https://aliyevelton-001-site1.ltempurl.com/api/JobBookmarks/`, {
+        jobId: detailedData?.id,
+        userId: userData?.id
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+    } catch (error) {
+      console.error("Error fetching job data:", error);
+    }
+  }
 
   return (
     <section id="requirements">
@@ -87,7 +108,7 @@ function Requirements({ collection, setCollection }) {
                 </span>
                 <div className="requirements__categories-row-content">
                   <h1>Field</h1>
-                  <p>{detailedData?.position}</p>
+                  <p>{detailedData?.category.name}</p>
                 </div>
               </div>
               <div className="requirements__categories-row">
@@ -185,12 +206,15 @@ function Requirements({ collection, setCollection }) {
                 <div>
                   <h1>{detailedData?.company.name}</h1>
                   <p>{detailedData?.title}</p>
-                  <span>{detailedData?.location} - Onsite</span>
+                  <span>{detailedData?.location}</span>
                 </div>
               </div>
               <span
                 className={saveActive ? "save-active" : ""}
-                onClick={() => setSaveActive(!saveActive)}
+                onClick={() => {
+                  setSaveActive(!saveActive);
+                  handleBookmark();
+                }}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -209,35 +233,33 @@ function Requirements({ collection, setCollection }) {
               </span>
             </div>
             <div className="requirements__content-details">
-              {requirementsDetails.map((detail, index) => (
-                <div key={index} className="requirements__content-detail">
-                  <h1>{detail.label}</h1>
-                  {detail.label === "Salary" ? (
-                    <p>$ {detail.value}</p>
-                  ) : detail.label === "Number of Applicants" ? (
-                    <p>
-                      {detail.value[0]} / <span>{detail.value[1]}</span>
-                    </p>
-                  ) : (
-                    <p>{detail.value}</p>
-                  )}
-                </div>
-              ))}
+              <div className="requirements__content-detail">
+                <h1>Salary</h1>
+                <p>{(detailedData?.salaryType == 3) ? "Not Specified" : (detailedData?.salaryType == 2) ? `${detailedData?.minSalary} - ${detailedData?.maxSalary}` : (detailedData?.exactSalary)}</p>
+              </div>
+              <div className="requirements__content-detail">
+                <h1>Job Type</h1>
+                <p>{detailedData?.jobType}</p>
+              </div>
+              <div className="requirements__content-detail">
+                <h1>Deadline</h1>
+                <p>{formattedExpireDate}</p>
+              </div>
+              <div className="requirements__content-detail">
+                <h1>View</h1>
+                <p>{detailedData?.views != undefined && detailedData?.views + 1}</p>
+              </div>
             </div>
             <div className="requirements__buttons">
               <DefaultBtn color="#FFE81D">Description</DefaultBtn>
               <DefaultBtn color="#fff">Company</DefaultBtn>
             </div>
-            {descriptionAndRequirements.map((row, index) => (
-              <div key={index} className="requirements__row">
-                <h1>{row.label}</h1>
-                <ul className="requirements__row-fields">
-                  {row.fields.map((field, index) => (
-                    <li key={index}>{field}</li>
-                  ))}
-                </ul>
-              </div>
-            ))}
+            <div className="requirements__row">
+              <h1>Job Description</h1>
+              <ul className="requirements__row-fields">
+                <li>{detailedData?.description}</li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
@@ -246,3 +268,4 @@ function Requirements({ collection, setCollection }) {
 }
 
 export default Requirements;
+

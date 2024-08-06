@@ -62,9 +62,9 @@ function ApplicationForm({ inputs, setInputs, setActiveStep, setActiveForm }) {
                     />
                   </svg>
                 </span>
-                <p>Choose the file</p>
+                <p>{inputs.Cv ? inputs.Cv.name : "Choose the file"}</p>
               </div>
-              <p>Only PDF or DOCX file (max 2mb)</p>
+              {!inputs.Cv && <p>Only PDF or DOCX file (max 2mb)</p>}
             </div>
             <input
               type="file"

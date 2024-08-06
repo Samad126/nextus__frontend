@@ -1,9 +1,10 @@
-import React from "react";
+
 import SearchResults from "../SearchResults/SearchResults";
 import { useLocation } from "react-router-dom";
 
-function PageHeader({ error, list, activeFilter, setActiveFilter, content }) {
+function PageHeader({ setCollection, error, list, activeFilter, setActiveFilter, content }) {
   const location = useLocation();
+
 
   return (
     <div className="page__header">
@@ -19,6 +20,7 @@ function PageHeader({ error, list, activeFilter, setActiveFilter, content }) {
           );
         })}
         <SearchResults
+          setCollection={setCollection}
           error={error}
           list={list}
           activeFilter={activeFilter}

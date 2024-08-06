@@ -71,7 +71,7 @@ function App() {
     url = "https://aliyevelton-001-site1.ltempurl.com/api/Courses";
   }
 
-  console.log(collection);
+  // console.log(collection, filteredCollection);
 
 
   useEffect(() => {
@@ -127,6 +127,7 @@ function App() {
           path="/jobs"
           element={
             <Collection
+              setCollection={setCollection}
               error={error}
               activeFilter={activeFilter}
               setActiveFilter={setActiveFilter}
@@ -138,8 +139,7 @@ function App() {
           path="/jobs/:id"
           element={
             <Requirements
-              collection={collection}
-              setCollection={setCollection}
+              userData={userData}
             />
           }
         />

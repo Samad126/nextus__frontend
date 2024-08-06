@@ -1,20 +1,27 @@
-import React, { useState } from "react";
+import axios from "axios";
+import { useCallback, useEffect, useRef } from "react";
 
-function SearchResults({ error, list, activeFilter, setActiveFilter }) {
-  const searchUser = (e) => {
-    const filteredList = list.filter((filteredItem) =>
-      filteredItem.title.toLowerCase().includes(e.target.value.toLowerCase())
-    );
+function SearchResults({ setCollection, error, list, activeFilter, setActiveFilter }) {
+  const inpRef = useRef();
 
-    console.log(filteredList);
-  };
+  const searchUser = useCallback(async () => {
+    try {
+      const response = await axios.get(`https://aliyevelton-001-site1.ltempurl.com/api/Jobs?title=${inpRef.current.value}`);
+      setCollection(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }, [setCollection]);
+
+  useEffect(() => {
+    searchUser();
+  }, [searchUser]);
 
   return (
     <div className="search__results">
       <span
-        className={`search__results-filter ${
-          activeFilter ? "active-filter" : ""
-        }`}
+        className={`search__results-filter ${activeFilter ? "active-filter" : ""
+          }`}
         onClick={() => setActiveFilter(!activeFilter)}
       >
         {activeFilter ? (
@@ -70,13 +77,13 @@ function SearchResults({ error, list, activeFilter, setActiveFilter }) {
           </svg>
         </span>
         <input
+          ref={inpRef}
           type="text"
           placeholder="Search for jobs..."
           onChange={searchUser}
         />
       </div>
       <div className="search__results-found">
-        <p>Search result</p>
         <p>
           <span>{error ? 0 : list.length} </span> Jobs Found
         </p>
