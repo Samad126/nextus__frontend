@@ -1,7 +1,38 @@
-import React from "react";
+import axios from "axios";
 import { DefaultBtn } from "../../assets/components.styles";
+import { useEffect, useState } from "react";
 
-function ConfirmModal({ setActiveModal }) {
+function ConfirmModal({ userData, inputs, setActiveModal }) {
+  const [finalData, setFinalData] = useState({});
+
+  useEffect(() => {
+    if (inputs && userData.id) {
+      const data = {
+        FullName: inputs.FullName,
+        CoverLetter: inputs.CoverLetter,
+        Cv: inputs.Cv,
+        JobId: 8,
+        UserId: userData.id,
+      };
+      setFinalData(data);
+      console.log("Final Data:", data);
+    }
+  }, [inputs, userData]);
+
+  const handleSubmit = async (e) => {
+    e.stopPropagation();
+    try {
+      await axios.post("https://aliyevelton-001-site1.ltempurl.com/api/JobApplications", finalData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      setActiveModal("congrats-modal");
+    } catch (error) {
+      console.error("Error submitting the form:", error.response.data);
+    }
+  };
+
   return (
     <div className="modal-confirm">
       <div className="modal__container-header">
@@ -14,24 +45,18 @@ function ConfirmModal({ setActiveModal }) {
       </div>
       <div className="modal__container-rows">
         <div className="modal__container-row">
-          Full name : <p>Ilaha Maharramova</p>
+          Full name: <p>{inputs.FullName}</p>
         </div>
         <div className="modal__container-row">
-          Email : <p>ilaha.maharramova123@gmail.com</p>
+          Email: <p>{inputs.email}</p>
         </div>
         <div className="modal__container-row">
-          Salary Expectation : <p>$1200-1800</p>
+          Salary Expectation: <p>$1200-1800</p>
         </div>
       </div>
       <div className="modal__container-buttons">
         <DefaultBtn onClick={() => setActiveModal("")}>Go back</DefaultBtn>
-        <DefaultBtn
-          onClick={(e) => {
-            e.stopPropagation();
-            setActiveModal("congrats-modal");
-          }}
-          color="#6875D1"
-        >
+        <DefaultBtn onClick={handleSubmit} color="#6875D1">
           Confirm and Send
         </DefaultBtn>
       </div>

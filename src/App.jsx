@@ -1,7 +1,7 @@
 import Footer from "./components/Footer/Footer";
 import Header from "./components/Header/Header";
 import "./assets/style.css";
-import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import Home from "./components/Home/Home";
 import Login from "./components/Auth/Login/Login";
 import Register from "./components/Auth/Register/Register";
@@ -10,8 +10,8 @@ import Requirements from "./components/Requirements/Requirements";
 import Error from "./components/Error/Error";
 import ContactUs from "./components/ContactUs/ContactUs";
 import Application from "./components/Application/Application";
-import ConfirmModal from "./components/Modal/ConfirmModal";
-import CongratsModal from "./components/Modal/CongratsModal";
+// import ConfirmModal from "./components/Modal/ConfirmModal";
+// import CongratsModal from "./components/Modal/CongratsModal";
 import Collection from "./components/Collection/Collection";
 import Modal from "./components/Modal/Modal";
 import Profile from "./components/Profile/Profile";
@@ -28,6 +28,12 @@ function App() {
   const [collection, setCollection] = useState([]);
   const [error, setError] = useState(false);
   const token = localStorage.getItem("token");
+  const [inputs, setInputs] = useState({
+    FullName: "",
+    email: "",
+    Cv: "",
+  });
+
   const currentUserUrl =
     "https://aliyevelton-001-site1.ltempurl.com/api/User/current";
 
@@ -137,7 +143,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route
           path="/application"
-          element={<Application setActiveModal={setActiveModal} />}
+          element={<Application inputs={inputs} setInputs={setInputs} setActiveModal={setActiveModal} />}
         />
         <Route path="/contact-us" element={<ContactUs />} />
         <Route path="/profile" element={<Profile userData={userData} />} />
@@ -146,7 +152,7 @@ function App() {
       </Routes>
 
       {activeModal.length > 0 ? (
-        <Modal setActiveModal={setActiveModal} activeModal={activeModal} />
+        <Modal userData={userData} inputs={inputs} setActiveModal={setActiveModal} activeModal={activeModal} />
       ) : (
         ""
       )}

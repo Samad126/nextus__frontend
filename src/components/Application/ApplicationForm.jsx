@@ -1,19 +1,16 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { DefaultBtn } from "../../assets/components.styles";
 import { TextField } from "@mui/material";
 
-function ApplicationForm({ setActiveStep, setActiveForm }) {
-  const [inputs, setInputs] = useState({
-    fullName: "",
-    email: "",
-    letter: "",
-    file: "",
-  });
+function ApplicationForm({ inputs, setInputs, setActiveStep, setActiveForm }) {
+  
   const [isDisabled, setIsDisabled] = useState(true);
 
   const checkForm = (obj) => {
     return Object.values(obj).every((value) => value !== null && value !== "");
   };
+
+  console.log(inputs, isDisabled);
 
   useEffect(() => {
     setIsDisabled(!checkForm(inputs));
@@ -27,8 +24,8 @@ function ApplicationForm({ setActiveStep, setActiveForm }) {
           label="Full Name"
           variant="outlined"
           type="text"
-          value={inputs.fullName}
-          onChange={(e) => setInputs({ ...inputs, fullName: e.target.value })}
+          value={inputs.FullName}
+          onChange={(e) => setInputs({ ...inputs, FullName: e.target.value })}
         />
         <TextField
           className="application__form-input"
@@ -37,14 +34,6 @@ function ApplicationForm({ setActiveStep, setActiveForm }) {
           type="email"
           value={inputs.email}
           onChange={(e) => setInputs({ ...inputs, email: e.target.value })}
-        />
-        <TextField
-          id="outlined-multiline-flexible"
-          label="Cover Letter"
-          className="application__form-input"
-          multiline
-          minRows={4}
-          maxRows={4}
         />
       </div>
       <div className="application__upload">
@@ -80,7 +69,7 @@ function ApplicationForm({ setActiveStep, setActiveForm }) {
             <input
               type="file"
               onChange={(e) =>
-                setInputs({ ...inputs, file: e.target.files[0] })
+                setInputs({ ...inputs, Cv: e.target.files[0] })
               }
             />
           </label>

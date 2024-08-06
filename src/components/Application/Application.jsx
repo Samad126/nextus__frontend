@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import ApplicationLetter from "./ApplicationLetter";
 import ApplicationForm from "./ApplicationForm";
 
-function Application({ setActiveModal }) {
+function Application({ inputs, setInputs, setActiveModal }) {
   const [activeStep, setActiveStep] = useState(1);
   const [activeForm, setActiveForm] = useState(false);
   const steps = ["Personal information", "Motivation letter"];
@@ -38,13 +38,12 @@ function Application({ setActiveModal }) {
               return (
                 <div key={index} className="application__progress-row">
                   <div
-                    className={`application__progress-step ${
-                      activeStep === index + 1
-                        ? "active"
-                        : activeStep >= index + 1
+                    className={`application__progress-step ${activeStep === index + 1
+                      ? "active"
+                      : activeStep >= index + 1
                         ? "completed"
                         : ""
-                    }`}
+                      }`}
                   >
                     <span>{index + 1}</span>
                     <p>{step}</p>
@@ -60,11 +59,15 @@ function Application({ setActiveModal }) {
 
           {!activeForm ? (
             <ApplicationForm
+              inputs={inputs}
+              setInputs={setInputs}
               setActiveForm={setActiveForm}
               setActiveStep={setActiveStep}
             />
           ) : (
             <ApplicationLetter
+              inputs={inputs}
+              setInputs={setInputs}
               setActiveModal={setActiveModal}
               setActiveForm={setActiveForm}
               setActiveStep={setActiveStep}
