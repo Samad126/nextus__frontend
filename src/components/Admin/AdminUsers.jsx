@@ -24,6 +24,14 @@ export default function AdminUsers() {
 
     console.log(users);
 
+    const logoStyle = {
+        width: '50px', // Adjust as needed
+        height: '50px', // Adjust as needed
+        borderRadius: '50%',
+        objectFit: 'cover',
+        border: '1px solid #ddd' // Optional: adds a border around the logo
+    };
+
     async function handleStatus(i, id){
         if (users[i].isActive){
             try {
@@ -85,7 +93,7 @@ export default function AdminUsers() {
                                 })
 
                                 return <tr className="jobs" key={index}>
-                                    <td><img src={user.profilePhoto} alt="" /></td>
+                                    <td><img src={`https://aliyevelton-001-site1.ltempurl.com/images/user-images/${user.profilePhoto}`} alt="" style={logoStyle}/></td>
                                     <td>{user.userName}</td>
                                     <td>{finalRole}</td>
                                     <td>{user.isActive ? "Active" : "Non Active"}</td>
