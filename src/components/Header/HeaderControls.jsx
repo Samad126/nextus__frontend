@@ -20,6 +20,7 @@ function HeaderControls({ userData }) {
   ];
 
   return (
+    
     <div className="header__controls">
       {navigations.map((navigation, index) => (
         <Link
