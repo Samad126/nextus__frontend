@@ -13,7 +13,7 @@ function Card({ list, path }) {
               src={
                 company.logo === null
                   ? "https://data-assets.ams3.digitaloceanspaces.com/electriciansearch-co-uk/logos/default-logo.png?rand=415"
-                  : company.logo
+                  : `https://aliyevelton-001-site1.ltempurl.com/images/companies/${company.logo}`
               }
               alt={"company" + "Logo"}
             />
@@ -41,7 +41,7 @@ function Card({ list, path }) {
         </Link>
       </div>
       <div className="card__bottom">
-        <img src={"image"} alt={list.title} />
+        <img src={`https://aliyevelton-001-site1.ltempurl.com/images/companies/${company.logo}`} alt={list.title} />
       </div>
     </div>
   );

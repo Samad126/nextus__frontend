@@ -85,7 +85,7 @@ function SearchResults({ setCollection, error, list, activeFilter, setActiveFilt
       </div>
       <div className="search__results-found">
         <p>
-          <span>{error ? 0 : list.length} </span> Jobs Found
+          <span>{error ? 0 : list.length} </span> Results Found
         </p>
       </div>
     </div>

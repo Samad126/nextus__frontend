@@ -1,6 +1,7 @@
 import React from "react";
 import { DefaultBtn } from "../../../assets/components.styles";
 import heroImg from "../../../assets/images/hero-image.png";
+import { Link } from "react-router-dom";
 function Hero() {
   return (
     <section id="hero">
@@ -14,7 +15,9 @@ function Hero() {
               opportunities.
             </p>
           </div>
-          <DefaultBtn>Get Started</DefaultBtn>
+          <Link to="/courses">
+            <DefaultBtn>Get Started</DefaultBtn>
+          </Link>
         </div>
         <div className="hero__right">
           <div className="hero__right-rate">
