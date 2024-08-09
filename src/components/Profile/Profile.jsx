@@ -7,6 +7,7 @@ import Card from "../Card/Card";
 import { courses, posts } from "../../constants";
 import ProfileContent from "./ProfileContent";
 import PostCard from "../Card/PostCard";
+import axios from "axios";
 
 function Profile({ userData }) {
   const [copiedText, setCopiedText] = useState({
@@ -27,16 +28,72 @@ function Profile({ userData }) {
 
   const [tooltipActive, setTooltipActive] = useState(false);
   const timeoutRef = useRef(null);
-  const handleChangeBackgroundImage = (e) => {
+  const handleChangeBackgroundImage = async(e) => {
     const file = e.target.files[0];
     setEditBackground(URL.createObjectURL(file));
+
+    const formData = new FormData();
+    formData.append("CoverImageFile", file);
+
+    try {
+      await axios.put("https://aliyevelton-001-site1.ltempurl.com/api/User/update-cover-image", 
+      formData, 
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  const handleChangeProfilePicture = (e) => {
+  useEffect(() =>{
+    setEditProfilePicture(`https://aliyevelton-001-site1.ltempurl.com/images/user-images/${userData.profilePhoto}`)
+    setEditBackground(`https://aliyevelton-001-site1.ltempurl.com/images/user-images/${userData.coverImage}`)
+    setDescription(userData.about);
+  }, [userData]);
+
+  const submitDesc = async() => {
+    try {
+      await axios.put("https://aliyevelton-001-site1.ltempurl.com/api/User/update-about-text", 
+      {
+        aboutText : description
+      }, 
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const handleChangeProfilePicture = async(e) => {
     const file = e.target.files[0];
     setEditProfilePicture(URL.createObjectURL(file));
+
+    const formData = new FormData();
+    formData.append("ProfilePhotoFile", file);
+
+    try {
+      await axios.put("https://aliyevelton-001-site1.ltempurl.com/api/User/update-profile-image", 
+      formData, 
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
     console.log(editBackground);
   };
+
 
   const handleTooltipClick = () => {
     setTooltipActive(true);
@@ -66,6 +123,7 @@ function Profile({ userData }) {
           description={description}
           setCopiedText={setCopiedText}
           setDescription={setDescription}
+          submitDesc={submitDesc}
         />
 
         <PageSection className="page__section">

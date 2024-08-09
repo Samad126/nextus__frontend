@@ -12,17 +12,24 @@ import ContactUs from "./components/ContactUs/ContactUs";
 import Application from "./components/Application/Application";
 // import ConfirmModal from "./components/Modal/ConfirmModal";
 // import CongratsModal from "./components/Modal/CongratsModal";
+import AdminPanel from "./components/Admin/AdminPanel";
 import Collection from "./components/Collection/Collection";
 import Modal from "./components/Modal/Modal";
 import Profile from "./components/Profile/Profile";
-import SharePost from "./components/SharePost/SharePost";
+import AdminShare from "./components/Admin/AdminShare";
 import axios from "axios";
+import AdminJobs from "./components/Admin/AdminJobs";
+import AdminUsers from "./components/Admin/AdminUsers";
+import AdminCompanies from "./components/Admin/AdminCompanies";
+import RoleUpdate from "./components/Admin/RoleUpdate";
+import AdminContact from "./components/Admin/AdminContact";
+import ContactDetail from "./components/Admin/ContactDetail";
 
 function App() {
   const location = useLocation();
   const [userData, setUserData] = useState({});
   const [authActive, setAuthActive] = useState(false);
-  const [activateLayout, setActivateLayout] = useState(true);
+  const [activateLayout, setActivateLayout] = useState("header");
   const [activeFilter, setActiveFilter] = useState(false);
   const [activeModal, setActiveModal] = useState("");
   const [collection, setCollection] = useState([]);
@@ -46,6 +53,7 @@ function App() {
           },
         })
         .then((res) => {
+          console.log(res.data);
           setUserData(res.data);
           setAuthActive(true);
           console.log(res.data);
@@ -56,23 +64,21 @@ function App() {
   let url = "";
   useEffect(() => {
     if (location.pathname === "/login" || location.pathname === "/register") {
-      setActivateLayout(false);
-    } else {
-      setActivateLayout(true);
+      setActivateLayout("auth");
+    } else if (location.pathname.includes("/admin")) {
+      setActivateLayout("admin");
     }
+    else setActivateLayout("def");
     window.scrollTo({
       top: 0,
       behavior: "smooth",
     });
   }, [location.pathname]);
-  if (location.pathname.includes("/jobs")) {
+  if (location.pathname.includes("/jobs") || location.pathname.includes("/company")) {
     url = "https://aliyevelton-001-site1.ltempurl.com/api/Jobs";
   } else if (location.pathname.includes("/courses")) {
     url = "https://aliyevelton-001-site1.ltempurl.com/api/Courses";
   }
-
-  // console.log(collection, filteredCollection);
-
 
   useEffect(() => {
     if (url.length > 0) {
@@ -91,7 +97,7 @@ function App() {
 
   return (
     <>
-      {activateLayout ? (
+      {activateLayout === "def" ? (
         <Header
           authActive={authActive}
           setAuthActive={setAuthActive}
@@ -101,6 +107,7 @@ function App() {
       ) : (
         ""
       )}
+
       <Routes>
         <Route path="/" element={<Home />} />
         <Route
@@ -158,7 +165,14 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/contact-us" element={<ContactUs />} />
         <Route path="/profile" element={<Profile userData={userData} />} />
-        <Route path="/profile/share-post" element={<SharePost />} />
+        <Route path="/admin/jobs/create" element={<AdminShare />} />
+        <Route path="/admin" element={<AdminPanel userData={userData} authActive={authActive} />} />
+        <Route path="/admin/jobs" element={<AdminJobs setCollection={setCollection} collection={collection} userData={userData}/>} />
+        <Route path="/admin/contact-us" element={<AdminContact setCollection={setCollection} collection={collection} userData={userData}/>} />
+        <Route path="/admin/contact-us/:id" element={<ContactDetail setCollection={setCollection} collection={collection} userData={userData}/>} />
+        <Route path="/admin/company" element={<AdminCompanies setCollection={setCollection} collection={collection} userData={userData}/>} />
+        <Route path="/admin/users" element={<AdminUsers userData={userData}/>} />
+        <Route path="/admin/roleupdate/:id" element={<RoleUpdate />} />
         <Route path="*" element={<Error />} />
       </Routes>
 
@@ -168,7 +182,11 @@ function App() {
         ""
       )}
 
-      {activateLayout ? <Footer /> : ""}
+      {activateLayout === "def" ? (
+        <Footer />
+      ) : (
+        ""
+      )}
     </>
   );
 }

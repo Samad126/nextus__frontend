@@ -18,6 +18,7 @@ function ProfileContent({
   description,
   setCopiedText,
   setDescription,
+  submitDesc
 }) {
   return (
     <div className="profile__content">
@@ -125,17 +126,14 @@ function ProfileContent({
                 label="Description"
                 multiline
                 maxRows={4}
-                value={description}
+                value={description ? description : ""}
                 onChange={(e) => setDescription(e.target.value)}
               />
               <DefaultBtn
                 onClick={() => {
                   setEditable(false);
-                  if (description === "") {
-                    setEditable(true);
-                  }
+                  submitDesc();
                 }}
-                disabled={description === "" ? true : false}
                 color="#6875d1"
               >
                 Submit

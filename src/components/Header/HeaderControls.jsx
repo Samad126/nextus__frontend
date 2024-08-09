@@ -27,7 +27,7 @@ function HeaderControls({ userData }) {
           key={index}
           to={
             navigation.value === "/profile"
-              ? navigation.value + "?" + userData.name
+              ? navigation.value + "?" + userData.id
               : navigation.value
           }
           className={navigation.label === activeControl ? "active-control" : ""}

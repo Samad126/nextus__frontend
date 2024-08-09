@@ -25,21 +25,6 @@ function Header({ userData, authActive }) {
       icon: bagIcon,
     },
     {
-      label: "Events",
-      value: "/events",
-      icon: ticketIcon,
-    },
-    {
-      label: "Network",
-      value: "/network",
-      icon: usersPlusIcon_1,
-    },
-    {
-      label: "Members",
-      value: "/members",
-      icon: usersPlusIcon_2,
-    },
-    {
       label: "Contacts",
       value: "/contact-us",
       icon: phoneCallIcon_1,

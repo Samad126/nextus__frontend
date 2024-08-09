@@ -89,6 +89,10 @@ video {
   vertical-align: baseline;
 }
 
+*{
+  box-sizing: border-box;
+}
+
 /* HTML5 display-role reset for older browsers */
 article,
 aside,
@@ -106,6 +110,11 @@ section {
 
 body {
   line-height: 1;
+  height: 100vh;
+}
+
+#root{
+  height: 100%;  
 }
 
 ol,
@@ -1352,6 +1361,88 @@ a {
 .error-validation p {
   text-align: start;
   line-height: 1.2rem;
+}
+
+.ant-space .ant-space-item {
+  width: 100% !important;
+}
+.ant-space .ant-space-item .ant-select {
+  width: 100% !important;
+  font-family: "Poppins" !important;
+}
+.ant-space textarea {
+  background-color: rebeccapurple;
+}
+
+.ant-select {
+  display: flex !important;
+  flex-direction: row-reverse !important;
+  align-items: center !important;
+  position: relative;
+  height: 48px;
+}
+.ant-select .ant-select-arrow {
+  left: 16px;
+  width: -moz-fit-content;
+  width: fit-content;
+  color: transparent;
+}
+.ant-select .ant-select-arrow::after {
+  content: "";
+  display: block;
+  width: 24px;
+  height: 24px;
+  background: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIj4KICA8cGF0aCBkPSJNNiA5TDEyIDE1TDE4IDkiIHN0cm9rZT0iYmxhY2siIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+Cjwvc3ZnPgo=") no-repeat center center;
+  background-size: contain;
+  position: absolute;
+}
+
+.ant-select-selection-item {
+  margin-left: 40px !important;
+}
+
+.ant-input {
+  height: 48px;
+  font-family: "Poppins" !important;
+}
+
+.vacancy-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.vacancy-form .vacancy-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.vacancy-form .vacancy-form__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 20px;
+}
+.vacancy-form .vacancy-form__row > div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.vacancy-form .vacancy-form__message {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 20px;
+}
+.vacancy-form .vacancy-form__message .vacancy-form__salary {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.vacancy-form .vacancy-form__message .vacancy-form__salary .vacancy-form__range {
+  display: flex;
+  gap: 20px;
+}
+
+#overRideBtn{
+  margin-top: 0 !important;
 }
 
 footer {
@@ -3267,80 +3358,6 @@ header .header__container .hamburger-react {
   flex-direction: column;
   gap: 24px;
 }
-#share-post .share-post__container .share-post__bottom form .MuiFormControl-root label {
-  font-family: "Poppins";
-}
-#share-post .share-post__container .share-post__bottom form .MuiFormControl-root .MuiInputBase-root {
-  width: 277px;
-  border-radius: 6px;
-  font-family: "Poppins";
-}
-#share-post .share-post__container .share-post__bottom form .MuiFormControl-root .MuiInputBase-root .MuiSelect-select {
-  padding: 12px 0px 12px 52px;
-}
-#share-post .share-post__container .share-post__bottom form .MuiFormControl-root .MuiInputBase-root svg {
-  display: none;
-}
-#share-post .share-post__container .share-post__bottom form .MuiFormControl-root:last-child .MuiInputBase-root {
-  width: 392px;
-}
-#share-post .share-post__container .share-post__bottom form .MuiFormControl-root:last-child .MuiInputBase-root .MuiInputBase-input {
-  padding: 16px !important;
-}
-#share-post .share-post__container .share-post__bottom form .MuiFormControl-root > svg {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  left: 16px;
-  width: 24px;
-  height: 24px;
-}
-#share-post .share-post__container .share-post__bottom .share-post__textarea {
-  margin-top: 56px;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
-#share-post .share-post__container .share-post__bottom .share-post__textarea .share-post__textarea-header {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-#share-post .share-post__container .share-post__bottom .share-post__textarea .share-post__textarea-header h1 {
-  font-size: 24px;
-  font-style: normal;
-  font-weight: 510;
-}
-#share-post .share-post__container .share-post__bottom .share-post__textarea .share-post__textarea-header p {
-  color: #5f5f5f;
-  font-size: 18px;
-  font-style: normal;
-  font-weight: 400;
-}
-#share-post .share-post__container .share-post__bottom .share-post__textarea .share-post__textarea-letter {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-#share-post .share-post__container .share-post__bottom .share-post__textarea .share-post__textarea-letter p {
-  text-align: end;
-  color: #8f8f8f;
-  font-size: 16px;
-  font-weight: 500;
-}
-#share-post .share-post__container .share-post__bottom .share-post__textarea .MuiFormControl-root {
-  border-radius: 6px;
-}
-#share-post .share-post__container .share-post__bottom .share-post__textarea .MuiFormControl-root label {
-  font-family: "Poppins" !important;
-}
-#share-post .share-post__container .share-post__bottom .share-post__textarea .MuiFormControl-root .MuiInputBase-root {
-  font-family: "Poppins" !important;
-}
-#share-post .share-post__container .share-post__bottom .share-post__textarea .MuiFormControl-root .MuiInputBase-root textarea {
-  height: 300px !important;
-}
 #share-post .share-post__container .share-post__bottom button {
   margin-top: 72px;
   background-color: #6875d1;
@@ -3351,3 +3368,90 @@ header .header__container .hamburger-react {
 .MuiPaper-root ul li {
   font-family: "Poppins" !important;
 }
+
+#adminContainer{
+  display: flex;
+  height: 100%;
+  align-items: start;
+}
+
+#insideContainer{
+  display: flex;
+  width: 85%;
+  flex-direction: column;
+}
+
+#insideContainer > div{
+  height: 70px;
+}
+#insideContainer > div:first-of-type > div{
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid black;
+  justify-content: end;
+  height: 100%;
+}
+
+#insideContainer > div:first-of-type img{
+  display: block;
+  height: 50px;
+}
+
+#sidebar{
+  display: flex;
+  height: 100%;
+  width: 320px;
+  flex-direction: column;
+  border-right: 1px solid black;
+}
+
+#sidebar > div:first-of-type{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid black;
+  height: 70px;
+}
+
+#sidebar > div:first-of-type > a{
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+#sidebar > div:last-of-type{
+  display: flex;
+  flex-direction: column;
+}
+
+#sideContents > a{
+  color: black;
+  border-bottom: 1px solid black;
+}
+
+#adminTable th, #adminTable td{
+  padding: 10px;
+}
+
+.jobs td{
+  text-align: center;
+  vertical-align: middle;
+}
+
+.jobs img{
+  height: 40px;
+}
+
+.actions{
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.actions > btn{
+  border: none;
+}
+
+/* .detailBtn{
+
+} */

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { DefaultBtn } from "../../assets/components.styles";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function Requirements({ userData }) {
@@ -8,26 +8,13 @@ function Requirements({ userData }) {
   const [detailedData, setDetailedData] = useState();
   const location = useLocation();
 
+  console.log(saveActive);
+  const navigate = useNavigate();
+
   const path = location.pathname.split("/").filter((x) => x !== "");
   const index = Number(path[path.length - 1]);
 
   console.log(userData, detailedData);
-
-  // useEffect(() => {
-  //   async function fetchJob() {
-  //     try {
-  //       const response = await axios.get(`https://aliyevelton-001-site1.ltempurl.com/api/JobBookmarks/${index}`, {
-  //         userId : userData.id
-  //       });
-  //       setSaveActive(response);
-  //     } catch (error) {
-  //       console.error("Error fetching job data:", error);
-  //     }
-  //   }
-  //   if (index !== undefined && index !== null) {
-  //     fetchJob();
-  //   }
-  // }, [index, userData.id]);
 
   useEffect(() => {
     async function fetchJob() {
@@ -45,8 +32,13 @@ function Requirements({ userData }) {
   useEffect(() => {
     async function fetchJob() {
       try {
-        const response = await axios.get(`https://aliyevelton-001-site1.ltempurl.com/api/Jobs/${index}`);
+        const response = await axios.get(`https://aliyevelton-001-site1.ltempurl.com/api/Jobs/${index}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`
+          }
+        });
         setDetailedData(response.data);
+        setSaveActive(response.data.isBookmarked);
       } catch (error) {
         console.error("Error fetching job data:", error);
       }
@@ -56,23 +48,26 @@ function Requirements({ userData }) {
     }
   }, [index]);
 
-  console.log(detailedData);
-
-  const fixedExpireDate = detailedData?.expireDate.slice(0, -4);
+  const fixedExpireDate = detailedData?.jobDetail.expireDate.slice(0, -4);
   const dateObject = new Date(fixedExpireDate);
   const options = { month: "long", day: "numeric" };
   const formattedExpireDate = dateObject.toLocaleDateString("en-US", options);
 
   function handleBookmark() {
     try {
-      axios.post(`https://aliyevelton-001-site1.ltempurl.com/api/JobBookmarks/`, {
-        jobId: detailedData?.id,
-        userId: userData?.id
-      }, {
-        headers: {
-          'Content-Type': 'application/json',
-        }
-      });
+      if (localStorage.getItem("token")) {
+        axios.post(`https://aliyevelton-001-site1.ltempurl.com/api/JobBookmarks/bookmark`, {
+          jobId: detailedData?.jobDetail.id,
+          userId: userData?.id
+        }, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem("token")}`
+          }
+        });
+        setSaveActive(!saveActive);
+      }
+      else navigate("/login");
     } catch (error) {
       console.error("Error fetching job data:", error);
     }
@@ -82,8 +77,8 @@ function Requirements({ userData }) {
     <section id="requirements">
       <div className="requirements__container">
         <div className="requirements__top">
-          <h1>{detailedData?.title}</h1>
-          <p>{detailedData?.company.name}</p>
+          <h1>{detailedData?.jobDetail.title}</h1>
+          <p>{detailedData?.jobDetail.company.name}</p>
         </div>
         <div className="requirements__bottom">
           <div className="requirements__categories">
@@ -108,7 +103,7 @@ function Requirements({ userData }) {
                 </span>
                 <div className="requirements__categories-row-content">
                   <h1>Field</h1>
-                  <p>{detailedData?.category.name}</p>
+                  <p>{detailedData?.jobDetail.category.name}</p>
                 </div>
               </div>
               <div className="requirements__categories-row">
@@ -131,7 +126,7 @@ function Requirements({ userData }) {
                 </span>
                 <div className="requirements__categories-row-content">
                   <h1>Job type</h1>
-                  <p>{detailedData?.jobType}</p>
+                  <p>{detailedData?.jobDetail.jobType}</p>
                 </div>
               </div>
               <div className="requirements__categories-row">
@@ -184,11 +179,11 @@ function Requirements({ userData }) {
                 </span>
                 <div className="requirements__categories-row-content">
                   <h1>Location</h1>
-                  <p>{detailedData?.location}</p>
+                  <p>{detailedData?.jobDetail.location}</p>
                 </div>
               </div>
             </div>
-            <Link to={`/jobs/apply/${detailedData?.id}`}>
+            <Link to={`/jobs/apply/${detailedData?.jobDetail.id}`}>
               <DefaultBtn className="requirements__apply">Apply now</DefaultBtn>
             </Link>
           </div>
@@ -197,22 +192,21 @@ function Requirements({ userData }) {
               <div className="requirements__content-header">
                 <img
                   src={
-                    !detailedData?.company.logo
+                    !detailedData?.jobDetail.company.logo
                       ? "https://data-assets.ams3.digitaloceanspaces.com/electriciansearch-co-uk/logos/default-logo.png?rand=415"
-                      : detailedData?.company.logo
+                      : detailedData?.jobDetail.company.logo
                   }
                   alt=""
                 />
                 <div>
-                  <h1>{detailedData?.company.name}</h1>
-                  <p>{detailedData?.title}</p>
-                  <span>{detailedData?.location}</span>
+                  <h1>{detailedData?.jobDetail.company.name}</h1>
+                  <p>{detailedData?.jobDetail.title}</p>
+                  <span>{detailedData?.jobDetail.location}</span>
                 </div>
               </div>
               <span
                 className={saveActive ? "save-active" : ""}
                 onClick={() => {
-                  setSaveActive(!saveActive);
                   handleBookmark();
                 }}
               >
@@ -235,11 +229,11 @@ function Requirements({ userData }) {
             <div className="requirements__content-details">
               <div className="requirements__content-detail">
                 <h1>Salary</h1>
-                <p>{(detailedData?.salaryType == 3) ? "Not Specified" : (detailedData?.salaryType == 2) ? `${detailedData?.minSalary} - ${detailedData?.maxSalary}` : (detailedData?.exactSalary)}</p>
+                <p>{(detailedData?.jobDetail.salaryType == 3) ? "Not Specified" : (detailedData?.jobDetail.salaryType == 2) ? `${detailedData?.jobDetail.minSalary} - ${detailedData?.jobDetail.maxSalary}` : (detailedData?.jobDetail.exactSalary)}</p>
               </div>
               <div className="requirements__content-detail">
                 <h1>Job Type</h1>
-                <p>{detailedData?.jobType}</p>
+                <p>{detailedData?.jobDetail.jobType}</p>
               </div>
               <div className="requirements__content-detail">
                 <h1>Deadline</h1>
@@ -247,7 +241,7 @@ function Requirements({ userData }) {
               </div>
               <div className="requirements__content-detail">
                 <h1>View</h1>
-                <p>{detailedData?.views != undefined && detailedData?.views + 1}</p>
+                <p>{detailedData?.jobDetail.views != undefined && detailedData?.jobDetail.views + 1}</p>
               </div>
             </div>
             <div className="requirements__buttons">
@@ -257,7 +251,7 @@ function Requirements({ userData }) {
             <div className="requirements__row">
               <h1>Job Description</h1>
               <ul className="requirements__row-fields">
-                <li>{detailedData?.description}</li>
+                <li>{detailedData?.jobDetail.description}</li>
               </ul>
             </div>
           </div>
