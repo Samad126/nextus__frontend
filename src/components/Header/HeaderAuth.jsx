@@ -7,7 +7,7 @@ function HeaderAuth() {
   return (
     <div className="header__auth">
       <Link to="/register">
-        <DefaultBtn>Sign in</DefaultBtn>
+        <DefaultBtn>Sign up</DefaultBtn>
       </Link>
       <Link to="/login">
         <DefaultBtn>

@@ -32,6 +32,15 @@ export default function AdminJobs({ setCollection ,collection, userData }) {
         }
     }
 
+    const logoStyle = {
+        width: '50px', // Adjust as needed
+        height: '50px', // Adjust as needed
+        borderRadius: '50%',
+        objectFit: 'cover',
+        border: '1px solid #ddd' // Optional: adds a border around the logo
+    };
+
+
     return (
         <>
             <div id="adminContainer">
@@ -51,7 +60,7 @@ export default function AdminJobs({ setCollection ,collection, userData }) {
                         <tbody>
                             {collection.map((job, index) => (
                                 <tr className="jobs" key={index}>
-                                    <td><img src={job.img} alt="" /></td>
+                                    <td><img src={`https://aliyevelton-001-site1.ltempurl.com/images/companies/${job.company.logo}`} alt="" style={logoStyle}/></td>
                                     <td>{job.company.name}</td>
                                     <td>{job.title}</td>
                                     <td className="actions">

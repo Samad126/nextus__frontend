@@ -73,8 +73,8 @@ function ProfileContent({
         <div className="profile__left">
           <div className="profile__info">
             <div className="profile__explanation">
-              <h1>{userData.name}</h1>
-              <p>UX/UI Designer</p>
+              <h1>{userData.name} {userData.surname}</h1>
+              <p>{userData.profession || 'Add Profession'}</p>
             </div>
             <p className="profile__connection">100+ network</p>
           </div>
@@ -86,7 +86,7 @@ function ProfileContent({
         <div className="profile__right">
           <div className="profile__share">
             <h1>Public profile & URL</h1>
-            <p>{copiedText.value}</p>
+            <p>{window.location.origin}/u/{userData.userName}</p>
           </div>
 
           <div className={`tooltip ${tooltipActive ? "tooltip-active" : ""}`}>

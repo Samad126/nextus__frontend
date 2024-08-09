@@ -11,7 +11,7 @@ import axios from "axios";
 
 function Profile({ userData }) {
   const [copiedText, setCopiedText] = useState({
-    value: "www.linkedin.com/in/ilaha-maharramova-61a782298",
+    value: "www.linkedin.com/in/salam-61a782298",
     copied: false,
   });
 
