@@ -2,7 +2,9 @@ import { Link } from "react-router-dom";
 
 function Card({ list, path }) {
   const { title, company } = list;
-
+  
+  console.log(path);
+  
   return (
     <div className="card">
       <div className="card__top">
@@ -11,16 +13,16 @@ function Card({ list, path }) {
           <div>
             <img
               src={
-                company.logo === null
+                company?.logo === null
                   ? "https://data-assets.ams3.digitaloceanspaces.com/electriciansearch-co-uk/logos/default-logo.png?rand=415"
-                  : `https://aliyevelton-001-site1.ltempurl.com/images/companies/${company.logo}`
+                  : `https://aliyevelton-001-site1.ltempurl.com/images/companies/${company?.logo}`
               }
               alt={"company" + "Logo"}
             />
-            <p>{company.name}</p>
+            <p>{company?.name}</p>
           </div>
         </div>
-        <Link to={`${path}/${list.id}`}>
+        <Link to={`/${path}/${list?.id}`}>
           <span>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -41,7 +43,7 @@ function Card({ list, path }) {
         </Link>
       </div>
       <div className="card__bottom">
-        <img src={`https://aliyevelton-001-site1.ltempurl.com/images/companies/${company.logo}`} alt={list.title} />
+        <img src={`https://aliyevelton-001-site1.ltempurl.com/images/companies/${company?.logo}`} alt={list?.title} />
       </div>
     </div>
   );

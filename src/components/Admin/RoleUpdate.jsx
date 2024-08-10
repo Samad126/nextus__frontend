@@ -4,7 +4,7 @@ import AdminHeader from "./AdminHeader";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 
-export default function RoleUpdates() {
+export default function RoleUpdates({userData}) {
     const [userDetails, setUserDetails] = useState({});
     const [roles, setRoles] = useState();
     const [selectedRoles, setSelectedRoles] = useState([]);
@@ -65,7 +65,7 @@ export default function RoleUpdates() {
             <div id="adminContainer">
                 <AdminSidebar></AdminSidebar>
                 <div id="insideContainer">
-                    <AdminHeader></AdminHeader>
+                    <AdminHeader userData={userData}></AdminHeader>
                     <div>
                         <h2>User : {userDetails.userName}</h2>
                         <h2>Current Roles</h2>

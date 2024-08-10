@@ -39,7 +39,7 @@ export default function AdminContact({ setCollection ,collection, userData }) {
             <div id="adminContainer">
                 <AdminSidebar></AdminSidebar>
                 <div id="insideContainer">
-                    <AdminHeader></AdminHeader>
+                    <AdminHeader userData={userData}></AdminHeader>
                     <table id="adminTable">
                         <thead>
                             <tr>

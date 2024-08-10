@@ -31,7 +31,7 @@ export default function AdminPanel({ userData, authActive }) {
             }) ? <div id="adminContainer">
                 <AdminSidebar></AdminSidebar>
                 <div id="insideContainer">
-                    <AdminHeader></AdminHeader>
+                    <AdminHeader userData={userData}></AdminHeader>
                 </div>
             </div> : ""}
         </>

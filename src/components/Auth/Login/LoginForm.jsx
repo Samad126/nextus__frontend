@@ -27,10 +27,16 @@ function LoginForm() {
     if (params.emailParams !== null && params.tokenParams !== null) {
       axios
         .post(mailConfirmUrl)
-        .then((res) => console.log(res.data))
-        .catch((err) => console.log(err.message));
+        .then((res) => {
+          console.log(res.data);
+          alert("testiqlendi");
+        })
+        .catch((err) => {
+          console.log(err);
+          
+        });
     }
-  }, [params]);
+  }, [mailConfirmUrl, params]);
 
   const formLogin = (e) => {
     e.preventDefault();
@@ -43,6 +49,10 @@ function LoginForm() {
       .then((res) => {
         localStorage.setItem("token", res.data.token);
         navigate("/");
+      }).catch((err) =>{
+        if (err.response.status == 400){
+          alert("please verify email");
+        }
       });
   };
 

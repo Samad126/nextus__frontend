@@ -2,9 +2,8 @@
 import SearchResults from "../SearchResults/SearchResults";
 import { useLocation } from "react-router-dom";
 
-function PageHeader({ setCollection, error, list, activeFilter, setActiveFilter, content }) {
+function PageHeader({ filters, setFilters, setCollection, error, list, activeFilter, setActiveFilter, content }) {
   const location = useLocation();
-
 
   return (
     <div className="page__header">
@@ -20,6 +19,8 @@ function PageHeader({ setCollection, error, list, activeFilter, setActiveFilter,
           );
         })}
         <SearchResults
+          filters={filters}
+          setFilters={setFilters}
           setCollection={setCollection}
           error={error}
           list={list}

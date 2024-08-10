@@ -7,6 +7,7 @@ import VacancyForm from "../Forms/VacancyForm";
 // import { Space, Select } from "antd";
 import AdminSidebar from "./AdminSidebar";
 import AdminHeader from "./AdminHeader";
+import CourseForm from "../Forms/CourseForm";
 
 function AdminShare({userData}) {
   const [announcement, setAnnouncement] = useState("");
@@ -135,7 +136,7 @@ function AdminShare({userData}) {
               </div>
               <div className="share-post__bottom">
                 <form>
-                  <VacancyForm
+                  <CourseForm
                     categories={categories}
                     companies={companies}
                     vacancy={vacancy}

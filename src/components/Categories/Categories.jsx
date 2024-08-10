@@ -1,45 +1,57 @@
-import React from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 
-function Categories({ activeFilter, setActiveFilter }) {
-  const categories = [
-    {
-      title: "Fields",
-      options: [
-        "Development",
-        "Business",
-        "IT & Software",
-        "Personal development",
-        "Design",
-        "Marketing",
-        "Photography & Video",
-        "Teaching & Academics",
-      ],
-    },
-    {
-      title: "Language",
-      options: [
-        "English",
-        "Spanish",
-        "Turkish",
-        "Russian",
-        "Italian",
-        "Chinese",
-      ],
-    },
-  ];
+function Categories({ filters, setFilters, setCollection, activeFilter, setActiveFilter }) {
+  const [categories, setCategories] = useState([]);
+
+  const location = useLocation();
+
+  const path = location.pathname.split("/").filter((x) => x !== "");
+  let index = path[path.length - 1];
+
+  index = index.charAt(0).toUpperCase() + index.slice(1).toLowerCase();
+
+  index = index.slice(0, -1);
+
+  async function handleFilterChange(e, id) {
+    console.log(e.target.checked);
+
+    let updatedFilters;
+    if (!e.target.checked) {
+      updatedFilters = filters.filter((sfilter) => { return sfilter != id });
+      setFilters(updatedFilters);
+    }
+    else {
+      updatedFilters = [...filters, id];
+      setFilters(updatedFilters);
+    }
+  }
+
+  console.log(categories);
+
+  useEffect(() => {
+    async function fetchCategories() {
+      try {
+        const response = await axios.get(`https://aliyevelton-001-site1.ltempurl.com/api/${index}Categories`);
+        console.log(response.data);
+        setCategories(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchCategories();
+  }, [index]);
 
   return (
     <div className={`categories ${activeFilter ? "active-categories" : ""}`}>
-      {categories.map((category, index) => (
+      {categories?.map((category, index) => (
         <div key={index} className="categories__row">
-          <h1>{category.title}</h1>
           <div className="categories__options">
-            {category.options.map((option, index) => (
-              <label key={index}>
-                <input type="checkbox" />
-                {option}
-              </label>
-            ))}
+            <label key={index}>
+              <input type="checkbox" onChange={(e) => handleFilterChange(e, category.id)} />
+              {category.name}
+            </label>
           </div>
         </div>
       ))}

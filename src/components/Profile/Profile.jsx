@@ -2,14 +2,17 @@ import React, { useEffect, useRef, useState } from "react";
 import { DefaultBtn, PageSection } from "../../assets/components.styles";
 import CopyToClipboard from "react-copy-to-clipboard";
 import { TextField } from "@mui/material";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Card from "../Card/Card";
 import { courses, posts } from "../../constants";
 import ProfileContent from "./ProfileContent";
 import PostCard from "../Card/PostCard";
 import axios from "axios";
 
-function Profile({ userData }) {
+function Profile({ userData, publicPp }) {
+  const [companyData, setCompanyData] = useState({});
+  const [publicData, setPublicData] = useState({});
+
   const [copiedText, setCopiedText] = useState({
     value: "www.linkedin.com/in/salam-61a782298",
     copied: false,
@@ -28,7 +31,24 @@ function Profile({ userData }) {
 
   const [tooltipActive, setTooltipActive] = useState(false);
   const timeoutRef = useRef(null);
-  const handleChangeBackgroundImage = async(e) => {
+
+  const location = useLocation();
+
+  const navigate = useNavigate();
+
+  const path = location.pathname.split("/").filter((x) => x !== "");
+
+  const query = window.location.search;
+  const uuid = query.substring(1);
+
+  console.log(uuid);
+
+  let name = publicPp ? path[path.length - 2] : path[path.length - 1];
+  let publicName = publicPp && path[path.length - 1] ;
+  console.log(path, name);
+  
+
+  const handleChangeBackgroundImage = async (e) => {
     const file = e.target.files[0];
     setEditBackground(URL.createObjectURL(file));
 
@@ -36,43 +56,82 @@ function Profile({ userData }) {
     formData.append("CoverImageFile", file);
 
     try {
-      await axios.put("https://aliyevelton-001-site1.ltempurl.com/api/User/update-cover-image", 
-      formData, 
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
-      });
+      await axios.put("https://aliyevelton-001-site1.ltempurl.com/api/User/update-cover-image",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${localStorage.getItem("token")}`
+          }
+        });
     } catch (error) {
       console.log(error);
     }
   };
 
-  useEffect(() =>{
-    setEditProfilePicture(`https://aliyevelton-001-site1.ltempurl.com/images/user-images/${userData.profilePhoto}`)
-    setEditBackground(`https://aliyevelton-001-site1.ltempurl.com/images/user-images/${userData.coverImage}`)
-    setDescription(userData.about);
-  }, [userData]);
+  useEffect(() => {
+    async function fetchComp() {
+      try {
+        const response = await axios.get(`https://aliyevelton-001-site1.ltempurl.com/api/Companies/${uuid}`);
+        setCompanyData(response.data)
 
-  const submitDesc = async() => {
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    if (name == "company") fetchComp();
+  }, [name, uuid]);
+
+  useEffect(() => {
+    async function fetchUser() {
+      try {
+        const response = await axios.get(`https://aliyevelton-001-site1.ltempurl.com/api/User/FindUser?username=${publicName}`);
+        setPublicData(response.data)
+
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    if (name == "u") fetchUser();
+  }, [name, publicName, uuid])
+
+  useEffect(() => {
+    if (name == "profile") {
+      setEditProfilePicture(`${userData.profilePhoto ? `https://aliyevelton-001-site1.ltempurl.com/images/user-images/${userData.profilePhoto}` : "https://i.pinimg.com/736x/d2/98/4e/d2984ec4b65a8568eab3dc2b640fc58e.jpg"} `)
+      setEditBackground(`${userData.coverImage ? `https://aliyevelton-001-site1.ltempurl.com/images/user-images/${userData.coverImage}` : "https://miro.medium.com/v2/resize:fit:1400/0*VN3fRVHbM1r__dtx"}`)
+      setDescription(userData?.about);
+    }
+    else if (name == "u"){
+      setEditProfilePicture(`${publicData.profilePhoto ? `https://aliyevelton-001-site1.ltempurl.com/images/user-images/${publicData.profilePhoto}` : "https://i.pinimg.com/736x/d2/98/4e/d2984ec4b65a8568eab3dc2b640fc58e.jpg"}`)
+      setEditBackground(`${publicData.coverImage ? `https://aliyevelton-001-site1.ltempurl.com/images/user-images/${publicData.coverImage}` : "https://miro.medium.com/v2/resize:fit:1400/0*VN3fRVHbM1r__dtx"}`)
+      setDescription(publicData?.about);
+    }
+    else {
+      setEditProfilePicture(`${companyData.logo ? `https://aliyevelton-001-site1.ltempurl.com/images/companies/${companyData.logo}` : "https://i.pinimg.com/736x/d2/98/4e/d2984ec4b65a8568eab3dc2b640fc58e.jpg"}`)
+      setEditBackground(`${companyData.coverImage ? `https://aliyevelton-001-site1.ltempurl.com/images/companies/${companyData.coverImage}` : "https://miro.medium.com/v2/resize:fit:1400/0*VN3fRVHbM1r__dtx"}`)
+      setDescription(companyData?.about);
+    }
+  }, [companyData?.about, companyData?.coverImage, companyData?.logo, name, publicData?.about, publicData?.coverImage, publicData?.profilePhoto, userData]);
+
+  const submitDesc = async () => {
     try {
-      await axios.put("https://aliyevelton-001-site1.ltempurl.com/api/User/update-about-text", 
-      {
-        aboutText : description
-      }, 
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
-      });
+      await axios.put("https://aliyevelton-001-site1.ltempurl.com/api/User/update-about-text",
+        {
+          aboutText: description
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`
+          }
+        });
     } catch (error) {
       console.log(error);
     }
   }
+  console.log(companyData);
 
-  const handleChangeProfilePicture = async(e) => {
+  const handleChangeProfilePicture = async (e) => {
     const file = e.target.files[0];
     setEditProfilePicture(URL.createObjectURL(file));
 
@@ -80,14 +139,14 @@ function Profile({ userData }) {
     formData.append("ProfilePhotoFile", file);
 
     try {
-      await axios.put("https://aliyevelton-001-site1.ltempurl.com/api/User/update-profile-image", 
-      formData, 
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
-      });
+      await axios.put("https://aliyevelton-001-site1.ltempurl.com/api/User/update-profile-image",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${localStorage.getItem("token")}`
+          }
+        });
     } catch (error) {
       console.log(error);
     }
@@ -106,11 +165,13 @@ function Profile({ userData }) {
     }, 1000);
   };
 
+  console.log(companyData);
+  
   return (
     <section id="profile">
       <div className="profile__container">
         <ProfileContent
-          userData={userData}
+          userData={userData ? userData : publicPp ? publicData : companyData}
           handleChangeBackgroundImage={handleChangeBackgroundImage}
           editBackground={editBackground}
           editProfilePicture={editProfilePicture}
@@ -128,24 +189,15 @@ function Profile({ userData }) {
 
         <PageSection className="page__section">
           <div className="page__section-top">
-            <h1>Bookings</h1>
-            <Link>See all</Link>
+            <h1>{name == "company" && "Opportunities"}</h1>
           </div>
-          <div className="page__section-bottom">
+          <div className="ppBtn">
             {/* {courses.map((course, index) =>
               index < 3 ? <Card key={index} course={course} /> : ""
             )} */}
-          </div>
-        </PageSection>
-        <PageSection className="page__section">
-          <div className="page__section-top">
-            <h1>Posts</h1>
-            <Link>See all</Link>
-          </div>
-          <div className="page__section-bottom">
-            {/* {posts.map((post, index) =>
-              index < 3 ? <PostCard key={index} post={post} /> : ""
-            )} */}
+            {name =="company" ? companyData?.courses?.map((job, index) =>
+              <DefaultBtn onClick={() => (navigate(`/courses/${job.id}`))} key={index}>{job.title}</DefaultBtn>
+            ) : ''}
           </div>
         </PageSection>
       </div>

@@ -1,21 +1,35 @@
 import axios from "axios";
 import { useCallback, useEffect, useRef } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
-function SearchResults({ setCollection, error, list, activeFilter, setActiveFilter }) {
+function SearchResults({ filters, setFilters, setCollection, error, list, activeFilter, setActiveFilter }) {
   const inpRef = useRef();
 
-  const searchUser = useCallback(async () => {
-    try {
-      const response = await axios.get(`https://aliyevelton-001-site1.ltempurl.com/api/Jobs?title=${inpRef.current.value}`);
-      setCollection(response.data);
-    } catch (error) {
-      console.log(error);
-    }
-  }, [setCollection]);
+  const location = useLocation();
 
-  useEffect(() => {
-    searchUser();
-  }, [searchUser]);
+  const path = location.pathname.split("/").filter((x) => x !== "");
+  let index = path[path.length - 1];
+
+  index  = index.charAt(0).toUpperCase() + index.slice(1).toLowerCase();
+  
+  console.log(index);
+  
+
+  const searchUser = useCallback(async () => {
+    // try {
+    //   const response = await axios.get(`https://aliyevelton-001-site1.ltempurl.com/api/${index}?title=${inpRef.current.value}`);
+    //   setCollection(response.data);
+    // } catch (error) {
+    //   console.log(error);
+    // }
+    let updatedFilters = filters.filter((sfilter) => {return typeof sfilter != "string"});
+    updatedFilters.push(inpRef.current.value);
+    setFilters(updatedFilters);
+  }, [filters, setFilters]);
+
+  // useEffect(() => {
+  //   searchUser();
+  // }, [searchUser]);
 
   return (
     <div className="search__results">

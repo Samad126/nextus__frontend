@@ -4,7 +4,7 @@ import TextArea from "antd/es/input/TextArea";
 import React, { useEffect, useRef, useState } from "react";
 import { DefaultBtn } from "../../assets/components.styles";
 
-function VacancyForm({ categories, companies, vacancy, setVacancy, errors }) {
+function CourseForm({ categories, companies, vacancy, setVacancy, errors }) {
 
   const [tagValue, setTagValue] = useState("");
 
@@ -247,7 +247,7 @@ function VacancyForm({ categories, companies, vacancy, setVacancy, errors }) {
           <div className="vacancy-form-field">
             <TextArea
               showCount
-              maxLength={5000}
+              maxLength={200}
               value={vacancy.description}
               onChange={(e) =>
                 setVacancy({ ...vacancy, description: e.target.value })
@@ -295,4 +295,4 @@ function VacancyForm({ categories, companies, vacancy, setVacancy, errors }) {
   );
 }
 
-export default VacancyForm;
+export default CourseForm;

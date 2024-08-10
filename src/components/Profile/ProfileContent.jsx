@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { DefaultBtn } from "../../assets/components.styles";
 import CopyToClipboard from "react-copy-to-clipboard";
 import { TextField } from "@mui/material";
@@ -20,12 +20,20 @@ function ProfileContent({
   setDescription,
   submitDesc
 }) {
+  const location = useLocation();
+
+  // const navigate = useNavigate();
+
+  const path = location.pathname.split("/").filter((x) => x !== "");
+  // const index = Number(path[path.length - 1]);
+
+  let name = path[path.length - 1];
+
   return (
     <div className="profile__content">
       <div className="profile__background">
         <img src={editBackground} alt="" />
-
-        <div className="profile__background-select">
+        {name == "profile" ? <div className="profile__background-select">
           <label>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -44,11 +52,11 @@ function ProfileContent({
             </svg>
             <input type="file" onChange={handleChangeBackgroundImage} />
           </label>
-        </div>
+        </div> : ""}
       </div>
       <div className="profile__picture">
         <img src={editProfilePicture} alt="" />
-        <label>
+        {name == "profile" ? <label>
           <span>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -67,7 +75,7 @@ function ProfileContent({
             </svg>
           </span>
           <input type="file" onChange={handleChangeProfilePicture} />
-        </label>
+        </label> : ""}
       </div>
       <div className="profile__header">
         <div className="profile__left">
@@ -78,10 +86,6 @@ function ProfileContent({
             </div>
             <p className="profile__connection">100+ network</p>
           </div>
-
-          <Link to="/profile/share-post">
-            <DefaultBtn>Post</DefaultBtn>
-          </Link>
         </div>
         <div className="profile__right">
           <div className="profile__share">
@@ -143,7 +147,7 @@ function ProfileContent({
             <p>{description}</p>
           )}
         </div>
-        <span onClick={() => setEditable(true)}>
+        {name == "profile" ? <span onClick={() => setEditable(true)}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -159,7 +163,7 @@ function ProfileContent({
               strokeLinejoin="round"
             />
           </svg>
-        </span>
+        </span> : ""}
       </div>
     </div>
   );

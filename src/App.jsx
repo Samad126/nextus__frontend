@@ -24,6 +24,10 @@ import AdminCompanies from "./components/Admin/AdminCompanies";
 import RoleUpdate from "./components/Admin/RoleUpdate";
 import AdminContact from "./components/Admin/AdminContact";
 import ContactDetail from "./components/Admin/ContactDetail";
+import CollectionSaved from "./components/Collection/CollectionSaved";
+import AdminCourses from "./components/Admin/AdminCourses";
+import AdminApplicant from "./components/Admin/AdminApplicant";
+import ApplicantDetail from "./components/Admin/ApplicantDetail";
 
 function App() {
   const location = useLocation();
@@ -31,6 +35,7 @@ function App() {
   const [authActive, setAuthActive] = useState(false);
   const [activateLayout, setActivateLayout] = useState("header");
   const [activeFilter, setActiveFilter] = useState(false);
+  const [filters, setFilters] = useState([]);
   const [activeModal, setActiveModal] = useState("");
   const [collection, setCollection] = useState([]);
   const [error, setError] = useState(false);
@@ -80,6 +85,45 @@ function App() {
     url = "https://aliyevelton-001-site1.ltempurl.com/api/Courses";
   }
 
+  console.log(filters);
+
+  useEffect(() => {
+    async function filterJobs() {
+      const path = location.pathname.split("/").filter((x) => x !== "");
+      let index = path[path.length - 1];
+
+      index = index.charAt(0).toUpperCase() + index.slice(1).toLowerCase();
+
+      let updatedIndex = index;
+
+      let finalQuery = "";
+
+
+      filters.forEach((filter, index) => {
+        if (typeof filter == "number") {
+          if (index == 0) {
+            finalQuery += `categoryId=${filter}`
+          }
+          else finalQuery += `&categoryId=${filter}`
+        }
+        else {
+          if (index == 0) {
+            finalQuery += `title=${filter}`
+          }
+          else finalQuery += `&title=${filter}`
+        }
+      })
+
+      try {
+        const response = await axios.get(`https://aliyevelton-001-site1.ltempurl.com/api/${updatedIndex}?${finalQuery}`);
+        setCollection(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    filterJobs();
+  }, [filters]);
+
   useEffect(() => {
     if (url.length > 0) {
       axios
@@ -114,6 +158,9 @@ function App() {
           path="/courses"
           element={
             <Collection
+              filters={filters}
+              setFilters={setFilters}
+              setCollection={setCollection}
               error={error}
               activeFilter={activeFilter}
               setActiveFilter={setActiveFilter}
@@ -125,8 +172,7 @@ function App() {
           path="/courses/:id"
           element={
             <Requirements
-              collection={collection}
-              setCollection={setCollection}
+              userData={userData}
             />
           }
         />
@@ -134,6 +180,8 @@ function App() {
           path="/jobs"
           element={
             <Collection
+              filters={filters}
+              setFilters={setFilters}
               setCollection={setCollection}
               error={error}
               activeFilter={activeFilter}
@@ -161,18 +209,31 @@ function App() {
             />
           }
         />
+        <Route
+          path="/saved"
+          element={
+            <CollectionSaved
+            userData={userData}
+            />
+          }
+        />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/contact-us" element={<ContactUs />} />
+        <Route path="/u/:username" element={<Profile publicPp={true} />} />
         <Route path="/profile" element={<Profile userData={userData} />} />
-        <Route path="/admin/jobs/create" element={<AdminShare />} />
+        <Route path="/company" element={<Profile />} />
+        <Route path="/admin/jobs/create" element={<AdminShare userData={userData}/>} />
         <Route path="/admin" element={<AdminPanel userData={userData} authActive={authActive} />} />
-        <Route path="/admin/jobs" element={<AdminJobs setCollection={setCollection} collection={collection} userData={userData}/>} />
-        <Route path="/admin/contact-us" element={<AdminContact setCollection={setCollection} collection={collection} userData={userData}/>} />
-        <Route path="/admin/contact-us/:id" element={<ContactDetail setCollection={setCollection} collection={collection} userData={userData}/>} />
-        <Route path="/admin/company" element={<AdminCompanies setCollection={setCollection} collection={collection} userData={userData}/>} />
-        <Route path="/admin/users" element={<AdminUsers userData={userData}/>} />
-        <Route path="/admin/roleupdate/:id" element={<RoleUpdate />} />
+        <Route path="/admin/jobs" element={<AdminJobs setCollection={setCollection} collection={collection} userData={userData} />} />
+        <Route path="/admin/contact-us" element={<AdminContact setCollection={setCollection} collection={collection} userData={userData} />} />
+        <Route path="/admin/contact-us/:id" element={<ContactDetail setCollection={setCollection} collection={collection} userData={userData} />} />
+        <Route path="/admin/applicants/:id" element={<ApplicantDetail setCollection={setCollection} collection={collection} userData={userData} />} />
+        <Route path="/admin/company" element={<AdminCompanies setCollection={setCollection} collection={collection} userData={userData} />} />
+        <Route path="/admin/users" element={<AdminUsers userData={userData} />} />
+        <Route path="/admin/courses" element={<AdminCourses collection={collection} setCollection={setCollection} userData={userData} />} />
+        <Route path="/admin/roleupdate/:id" element={<RoleUpdate userData={userData}/>} />
+        <Route path="/admin/applicants" element={<AdminApplicant setCollection={setCollection} collection={collection} userData={userData} />} />
         <Route path="*" element={<Error />} />
       </Routes>
 

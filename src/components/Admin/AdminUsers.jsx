@@ -4,7 +4,7 @@ import AdminHeader from "./AdminHeader";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-export default function AdminUsers() {
+export default function AdminUsers({userData}) {
     const [users, setUsers] = useState([]);
 
     useEffect(() => {
@@ -55,7 +55,7 @@ export default function AdminUsers() {
             <div id="adminContainer">
                 <AdminSidebar></AdminSidebar>
                 <div id="insideContainer">
-                    <AdminHeader></AdminHeader>
+                    <AdminHeader userData={userData}></AdminHeader>
                     <table id="adminTable">
                         <thead>
                             <tr>
@@ -99,7 +99,7 @@ export default function AdminUsers() {
                                     <td>{user.isActive ? "Active" : "Non Active"}</td>
                                     <td className="actions">
                                         <button onClick={() => navigate(`/admin/roleupdate/${user.id}`)}>Change Role</button>
-                                        <button onClick={() => navigate(`/jobs/${user.id}`)}>Detail</button>
+                                        <button onClick={() => navigate(`/u/${user.userName}`)}>Detail</button>
                                         <button onClick={() => handleStatus(index, user.id)}>{user.isActive ? "Deactivate" : "Activate"}</button>
                                     </td>
                                 </tr>

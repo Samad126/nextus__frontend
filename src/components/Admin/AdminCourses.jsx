@@ -4,31 +4,31 @@ import AdminHeader from "./AdminHeader";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-export default function AdminCompanies({ setCollection, collection, userData }) {
-    const [compData, setcompData] = useState([]);
+export default function AdminCourses({ setCollection ,collection, userData }) {
+    // const [isAdmin, setIsAdmin] = useState(false);
 
     const navigate = useNavigate();
 
-    useEffect(() => {
+    useEffect(() =>{
         async function fetchData() {
-            const response = await axios.get("https://aliyevelton-001-site1.ltempurl.com/api/Companies");
-            setcompData(response.data);
+            const response = await axios.get("https://aliyevelton-001-site1.ltempurl.com/api/Courses");
+            setCollection(response.data);
         }
         fetchData();
-    }, []);
+    },[setCollection])
 
-    async function handleDelete(id) {
+    async function handleDelete(id){
         try {
             const response = confirm("Are you sure?");
-            if (response) {
-                axios.delete(`https://aliyevelton-001-site1.ltempurl.com/api/Companies/${id}`);
-                let updatedComp = compData.filter((comp) => {
-                    return comp.id != id;
+            if (response){
+                axios.delete(`https://aliyevelton-001-site1.ltempurl.com/api/Courses/${id}`);
+                let updatedColl = collection.filter((coll) =>{
+                    return coll.id != id;
                 });
-                setcompData(updatedComp);
+                setCollection(updatedColl);
             }
         } catch (error) {
-            console.log(error);
+            console.log(error); 
         }
     }
 
@@ -40,31 +40,33 @@ export default function AdminCompanies({ setCollection, collection, userData }) 
         border: '1px solid #ddd' // Optional: adds a border around the logo
     };
 
-    console.log(compData);
-
+    // console.log(cole);
+    
     return (
         <>
             <div id="adminContainer">
                 <AdminSidebar></AdminSidebar>
                 <div id="insideContainer">
                     <AdminHeader userData={userData}></AdminHeader>
-                    <button>Create</button>
+                    <button onClick={() => navigate("/admin/jobs/create")}>Create</button>
                     <table id="adminTable">
                         <thead>
                             <tr>
-                                <th>Logo</th>
+                                <th>Image</th>
                                 <th>Company Name</th>
+                                <th>Job Title</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {compData.map((comp, index) => (
+                            {collection.map((job, index) => (
                                 <tr className="jobs" key={index}>
-                                    <td><img src={`https://aliyevelton-001-site1.ltempurl.com/images/companies/${comp.logo}`} alt="" style={logoStyle} /></td>
-                                    <td>{comp.name}</td>
+                                    <td><img src={`https://aliyevelton-001-site1.ltempurl.com/images/companies/${job.company.logo}`} alt="" style={logoStyle}/></td>
+                                    <td>{job.company.name}</td>
+                                    <td>{job.title}</td>
                                     <td className="actions">
-                                        <button className="redBtn" onClick={() => { navigate(`/company?${comp.id}`) }}>Detail</button>
-                                        <button className="redBtn" onClick={() => handleDelete(comp.id)}>Delete</button>
+                                        <button className="redBtn" onClick={() => handleDelete(job.id)}>Delete</button>
+                                        <button className="blueBtn" onClick={() => navigate(`/courses/${job.id}`)}>Detail</button>
                                     </td>
                                 </tr>
                             ))}
@@ -75,4 +77,3 @@ export default function AdminCompanies({ setCollection, collection, userData }) 
         </>
     );
 }
-

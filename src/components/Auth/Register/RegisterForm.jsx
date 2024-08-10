@@ -76,7 +76,7 @@ function RegisterForm() {
     e.preventDefault();
     checkValidation();
     setCheckInput(true);
-    // axios.post(url, registeredUser).then((res) => console.log(res));
+    axios.post(url, registeredUser).then((res) => {console.log(res); alert("please verify email")});
     // setRegisteredUser({
     //   ...registeredUser,
     //   name: "",

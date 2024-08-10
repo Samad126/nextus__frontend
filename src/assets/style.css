@@ -3094,6 +3094,7 @@ header .header__container .hamburger-react {
   z-index: 1;
   border: 6px solid #fff;
   position: relative;
+  background: white;
 }
 #profile .profile__container .profile__picture img {
   width: 100%;
@@ -3456,3 +3457,14 @@ header .header__container .hamburger-react {
 /* .detailBtn{
 
 } */
+
+.ppBtn{
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.ppBtn > button{
+  background-color: #6875d1;
+  color: white;
+}

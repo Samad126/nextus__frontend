@@ -14,6 +14,10 @@ function Requirements({ userData }) {
   const path = location.pathname.split("/").filter((x) => x !== "");
   const index = Number(path[path.length - 1]);
 
+  let name = path[path.length - 2];
+
+  name = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+
   console.log(userData, detailedData);
 
   useEffect(() => {
@@ -24,15 +28,15 @@ function Requirements({ userData }) {
         console.error("Error fetching job data:", error);
       }
     }
-    if (index !== undefined && index !== null) {
+    if (index !== undefined && index !== null && name == "Jobs") {
       fetchJob();
     }
-  }, [index]);
+  }, [index, name]);
 
   useEffect(() => {
     async function fetchJob() {
       try {
-        const response = await axios.get(`https://aliyevelton-001-site1.ltempurl.com/api/Jobs/${index}`, {
+        const response = await axios.get(`https://aliyevelton-001-site1.ltempurl.com/api/${name}/${index}`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`
           }
@@ -46,25 +50,43 @@ function Requirements({ userData }) {
     if (index !== undefined && index !== null) {
       fetchJob();
     }
-  }, [index]);
+  }, [index, name]);
 
-  const fixedExpireDate = detailedData?.jobDetail.expireDate.slice(0, -4);
-  const dateObject = new Date(fixedExpireDate);
-  const options = { month: "long", day: "numeric" };
-  const formattedExpireDate = dateObject.toLocaleDateString("en-US", options);
+  let fixedExpireDate, dateObject, options, formattedExpireDate;
+
+  if (name == "Jobs") {
+    fixedExpireDate = detailedData?.detail.expireDate.slice(0, -4);
+    dateObject = new Date(fixedExpireDate);
+    options = { month: "long", day: "numeric" };
+    formattedExpireDate = dateObject.toLocaleDateString("en-US", options);
+  }
 
   function handleBookmark() {
+    let updatedIndex = name.slice(0, -1);
     try {
       if (localStorage.getItem("token")) {
-        axios.post(`https://aliyevelton-001-site1.ltempurl.com/api/JobBookmarks/bookmark`, {
-          jobId: detailedData?.jobDetail.id,
-          userId: userData?.id
-        }, {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${localStorage.getItem("token")}`
-          }
-        });
+        if (name == "Jobs") {
+          axios.post(`https://aliyevelton-001-site1.ltempurl.com/api/${updatedIndex}Bookmarks/bookmark`, {
+            jobId: detailedData?.detail.id,
+            userId: userData?.id
+          }, {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${localStorage.getItem("token")}`
+            }
+          });
+        }
+        else {
+          axios.post(`https://aliyevelton-001-site1.ltempurl.com/api/${updatedIndex}Bookmarks/bookmark`, {
+            courseId: detailedData?.detail.id,
+            userId: userData?.id
+          }, {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${localStorage.getItem("token")}`
+            }
+          });
+        }
         setSaveActive(!saveActive);
       }
       else navigate("/login");
@@ -72,13 +94,15 @@ function Requirements({ userData }) {
       console.error("Error fetching job data:", error);
     }
   }
-
+  
+  console.log(detailedData?.detail);
+  
   return (
     <section id="requirements">
       <div className="requirements__container">
         <div className="requirements__top">
-          <h1>{detailedData?.jobDetail.title}</h1>
-          <p>{detailedData?.jobDetail.company.name}</p>
+          <h1>{detailedData?.detail.title}</h1>
+          <p>{detailedData?.detail.company.name}</p>
         </div>
         <div className="requirements__bottom">
           <div className="requirements__categories">
@@ -103,7 +127,7 @@ function Requirements({ userData }) {
                 </span>
                 <div className="requirements__categories-row-content">
                   <h1>Field</h1>
-                  <p>{detailedData?.jobDetail.category.name}</p>
+                  <p>{detailedData?.detail.category.name}</p>
                 </div>
               </div>
               <div className="requirements__categories-row">
@@ -124,34 +148,40 @@ function Requirements({ userData }) {
                     />
                   </svg>
                 </span>
-                <div className="requirements__categories-row-content">
-                  <h1>Job type</h1>
-                  <p>{detailedData?.jobDetail.jobType}</p>
-                </div>
+                {name == 'Jobs' ?
+                  <div className="requirements__categories-row-content">
+                    <h1>Job type</h1>
+                    <p>{detailedData?.detail.jobType}</p>
+                  </div> :
+                  <div className="requirements__categories-row-content">
+                    <h1>Course type</h1>
+                    <p>{detailedData?.detail.courseType}</p>
+                  </div>}
               </div>
-              <div className="requirements__categories-row">
-                <span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                  >
-                    <path
-                      d="M21 10H3M16 2V6M8 2V6M10.5 14L12 13V18M10.75 18H13.25M7.8 22H16.2C17.8802 22 18.7202 22 19.362 21.673C19.9265 21.3854 20.3854 20.9265 20.673 20.362C21 19.7202 21 18.8802 21 17.2V8.8C21 7.11984 21 6.27976 20.673 5.63803C20.3854 5.07354 19.9265 4.6146 19.362 4.32698C18.7202 4 17.8802 4 16.2 4H7.8C6.11984 4 5.27976 4 4.63803 4.32698C4.07354 4.6146 3.6146 5.07354 3.32698 5.63803C3 6.27976 3 7.11984 3 8.8V17.2C3 18.8802 3 19.7202 3.32698 20.362C3.6146 20.9265 4.07354 21.3854 4.63803 21.673C5.27976 22 6.11984 22 7.8 22Z"
-                      stroke="black"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </span>
-                <div className="requirements__categories-row-content">
-                  <h1>Deadline</h1>
-                  <p>{formattedExpireDate}</p>
-                </div>
-              </div>
+              {name == "Jobs" ?
+                <div className="requirements__categories-row">
+                  <span>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                    >
+                      <path
+                        d="M21 10H3M16 2V6M8 2V6M10.5 14L12 13V18M10.75 18H13.25M7.8 22H16.2C17.8802 22 18.7202 22 19.362 21.673C19.9265 21.3854 20.3854 20.9265 20.673 20.362C21 19.7202 21 18.8802 21 17.2V8.8C21 7.11984 21 6.27976 20.673 5.63803C20.3854 5.07354 19.9265 4.6146 19.362 4.32698C18.7202 4 17.8802 4 16.2 4H7.8C6.11984 4 5.27976 4 4.63803 4.32698C4.07354 4.6146 3.6146 5.07354 3.32698 5.63803C3 6.27976 3 7.11984 3 8.8V17.2C3 18.8802 3 19.7202 3.32698 20.362C3.6146 20.9265 4.07354 21.3854 4.63803 21.673C5.27976 22 6.11984 22 7.8 22Z"
+                        stroke="black"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </span>
+                  <div className="requirements__categories-row-content">
+                    <h1>Deadline</h1>
+                    <p>{formattedExpireDate}</p>
+                  </div>
+                </div> : ""}
               <div className="requirements__categories-row">
                 <span>
                   <svg
@@ -179,29 +209,29 @@ function Requirements({ userData }) {
                 </span>
                 <div className="requirements__categories-row-content">
                   <h1>Location</h1>
-                  <p>{detailedData?.jobDetail.location}</p>
+                  <p>{detailedData?.detail.location}</p>
                 </div>
               </div>
             </div>
-            <Link to={`/jobs/apply/${detailedData?.jobDetail.id}`}>
+            {name == "Jobs" && <Link to={`/jobs/apply/${detailedData?.detail.id}`}>
               <DefaultBtn className="requirements__apply">Apply now</DefaultBtn>
-            </Link>
+            </Link>}
           </div>
           <div className="requirements__content">
             <div className="requirements__content-top">
               <div className="requirements__content-header">
                 <img
                   src={
-                    !detailedData?.jobDetail.company.logo
+                    !detailedData?.detail.company.logo
                       ? "https://data-assets.ams3.digitaloceanspaces.com/electriciansearch-co-uk/logos/default-logo.png?rand=415"
-                      : detailedData?.jobDetail.company.logo
+                      : `https://aliyevelton-001-site1.ltempurl.com/images/companies/${detailedData?.detail.company.logo}`
                   }
                   alt=""
                 />
                 <div>
-                  <h1>{detailedData?.jobDetail.company.name}</h1>
-                  <p>{detailedData?.jobDetail.title}</p>
-                  <span>{detailedData?.jobDetail.location}</span>
+                  <h1>{detailedData?.detail.company.name}</h1>
+                  <p>{detailedData?.detail.title}</p>
+                  <span>{detailedData?.detail.location}</span>
                 </div>
               </div>
               <span
@@ -226,32 +256,41 @@ function Requirements({ userData }) {
                 </svg>
               </span>
             </div>
-            <div className="requirements__content-details">
-              <div className="requirements__content-detail">
-                <h1>Salary</h1>
-                <p>{(detailedData?.jobDetail.salaryType == 3) ? "Not Specified" : (detailedData?.jobDetail.salaryType == 2) ? `${detailedData?.jobDetail.minSalary} - ${detailedData?.jobDetail.maxSalary}` : (detailedData?.jobDetail.exactSalary)}</p>
+            {name == "Jobs" ?
+              <div className="requirements__content-details">
+                <div className="requirements__content-detail">
+                  <h1>Salary</h1>
+                  <p>{(detailedData?.detail.salaryType == 3) ? "Not Specified" : (detailedData?.detail.salaryType == 2) ? `${detailedData?.detail.minSalary} - ${detailedData?.detail.maxSalary}` : (detailedData?.detail.exactSalary)}</p>
+                </div>
+                <div className="requirements__content-detail">
+                  <h1>Job Type</h1>
+                  <p>{detailedData?.detail.jobType}</p>
+                </div>
+                <div className="requirements__content-detail">
+                  <h1>Deadline</h1>
+                  <p>{formattedExpireDate}</p>
+                </div>
+                <div className="requirements__content-detail">
+                  <h1>View</h1>
+                  <p>{detailedData?.detail.views != undefined && detailedData?.detail.views + 1}</p>
+                </div>
+              </div> :
+              <div className="requirements__content-details">
+                {detailedData?.detail?.tags?.map((tag, index) => (
+                  <div key={index} className="requirements__content-detail">
+                    <p>{tag}</p>
+                  </div>
+                ))}
               </div>
-              <div className="requirements__content-detail">
-                <h1>Job Type</h1>
-                <p>{detailedData?.jobDetail.jobType}</p>
-              </div>
-              <div className="requirements__content-detail">
-                <h1>Deadline</h1>
-                <p>{formattedExpireDate}</p>
-              </div>
-              <div className="requirements__content-detail">
-                <h1>View</h1>
-                <p>{detailedData?.jobDetail.views != undefined && detailedData?.jobDetail.views + 1}</p>
-              </div>
-            </div>
+            }
             <div className="requirements__buttons">
               <DefaultBtn color="#FFE81D">Description</DefaultBtn>
-              <DefaultBtn color="#fff">Company</DefaultBtn>
+              <DefaultBtn onClick={() => {navigate(`/company?${detailedData?.detail.company.id}`)}} color="#fff">Company</DefaultBtn>
             </div>
             <div className="requirements__row">
-              <h1>Job Description</h1>
+              <h1>{name.slice(0,-1)} Description</h1>
               <ul className="requirements__row-fields">
-                <li>{detailedData?.jobDetail.description}</li>
+                <li>{detailedData?.detail.description}</li>
               </ul>
             </div>
           </div>

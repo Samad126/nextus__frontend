@@ -4,7 +4,7 @@ import AdminHeader from "./AdminHeader";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 
-export default function ContactDetail({ setCollection, collection, userData }) {
+export default function ApplicantDetail({ setCollection, collection, userData }) {
     const [contData, setContData] = useState([]);
 
     const navigate = useNavigate();
@@ -13,10 +13,11 @@ export default function ContactDetail({ setCollection, collection, userData }) {
 
     const path = location.pathname.split("/").filter((x) => x !== "");
     const index = Number(path[path.length - 1]);
+    console.log(index);
 
     useEffect(() => {
         async function fetchData() {
-            const response = await axios.get(`https://aliyevelton-001-site1.ltempurl.com/api/ContactUs/${index}`);
+            const response = await axios.get(`https://aliyevelton-001-site1.ltempurl.com/api/JobApplications/${index}`);
             setContData(response.data);
         }
         fetchData();
@@ -107,14 +108,12 @@ export default function ContactDetail({ setCollection, collection, userData }) {
                     <AdminHeader userData={userData}/>
                     <div className="jobs">
                         <button onClick={() => navigate("/admin/contact-us")}>Back</button>
-                        <h1>Name</h1>
-                        <p>{contData.name}</p>
-                        <h1>Surname</h1>
-                        <p>{contData.surname}</p>
-                        <h1>Email</h1>
-                        <p>{contData.email}</p>
-                        <h1>Message</h1>
-                        <p>{contData.message}</p>
+                        <h1>Full Name</h1>
+                        <p>{contData.fullName}</p>
+                        <h1>Cover Letter</h1>
+                        <p>{contData.coverLetter}</p>
+                        <h1>CV</h1>
+                        <a target="_blank" href={`https://aliyevelton-001-site1.ltempurl.com/files/jobApplications/${contData.cv}`} download="CustomFileName.pdf">Open PDF</a>
                     </div>
                 </div>
             </div>

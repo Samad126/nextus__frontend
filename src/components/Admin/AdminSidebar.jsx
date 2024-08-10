@@ -14,7 +14,6 @@ export default function AdminSidebar() {
                         color: white;
                         display: flex;
                         flex-direction: column;
-                        justify-content: space-between;
                     }
 
                     #sidebar div:first-child {
@@ -81,9 +80,11 @@ export default function AdminSidebar() {
                 <div id="sideContents">
                     <NavLink to={"/admin"}>Dashboard</NavLink>
                     <NavLink to={"/admin/jobs"}>Jobs</NavLink>
+                    <NavLink to={"/admin/courses"}>Courses</NavLink>
                     <NavLink to={"/admin/company"}>Company</NavLink>
                     <NavLink to={"/admin/contact-us"}>Contact Us</NavLink>
                     <NavLink to={"/admin/users"}>Users</NavLink>
+                    <NavLink to={"/admin/applicants"}>Job Applicants</NavLink>
                 </div>
             </div>
         </>
